@@ -25,6 +25,37 @@ drifted.
    extension outside Anthropic's own directory shows.
 3. Click Install.
 
+## Trying it out
+
+Everything below runs on one Mac; the extension never leaves it.
+
+1. **Get Virgil.** Download it from <https://virgil.app> (a direct download, or
+   the Mac App Store version — both work the same here). It runs on macOS 14 or
+   later.
+2. **First launch.** Virgil asks you to choose an AI for its own features
+   (topic naming, summaries, its built-in chat). On a Mac with Apple
+   Intelligence enabled it picks that and asks nothing; otherwise paste an
+   Anthropic or OpenAI API key. The extension does not use this — Claude
+   Desktop brings its own model — but Virgil will not open without one.
+3. **Put something on the map.** Browse a few sites — a search and a couple of
+   result pages is enough — or bring in bookmarks with Settings → Default
+   Browser → Import from another browser. Claude can only read what is there.
+4. **Switch on agents and install.** Settings → AI Features → Agents → turn on
+   "Connect External Agents", then click "Install in Claude Desktop" and click
+   Install on the sheet (see "Installing" above). The row under the switch
+   turns to Working once Claude Desktop has talked to Virgil.
+5. **Ask Claude.** Some prompts that exercise each kind of tool:
+   - "What topics do I have open in Virgil?" — reads the map.
+   - "Read the page I'm looking at in Virgil and summarise it." — reads page
+     content.
+   - "Start a topic in Virgil about Roman aqueducts and file these three links
+     into it: …" — creates a topic and adds pages.
+   - "Pin the most useful of those sources." — pins a page.
+   - "Propose a tidier structure for my Virgil map." — Virgil shows a
+     before/after preview you approve or reject.
+   - "Delete that aqueducts topic." — Virgil asks you first; this and merging
+     are the two actions it always confirms.
+
 ## How it connects
 
 The extension contains a small script that runs on Claude Desktop's built-in
