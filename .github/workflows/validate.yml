@@ -1,0 +1,30 @@
+name: Validate and pack
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  mcpb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate the manifest
+        run: npx --yes @anthropic-ai/mcpb validate manifest.json
+      - name: Pack the bundle
+        run: npx --yes @anthropic-ai/mcpb pack . virgil.mcpb
+      - name: The bundle holds exactly the extension's files
+        run: |
+          unzip -l virgil.mcpb
+          for member in manifest.json server/index.js README.md LICENSE icon.png; do
+            unzip -l virgil.mcpb | grep -qE " $member\$" || { echo "missing $member"; exit 1; }
+          done
+          unzip -l virgil.mcpb | grep -qE "SECURITY.md|\.github|\.gitignore|\.mcpbignore" && { echo "repo-only file leaked into the bundle"; exit 1; }
+          echo "bundle ok"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: virgil.mcpb
+          path: virgil.mcpb

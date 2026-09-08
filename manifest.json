@@ -1,0 +1,166 @@
+{
+  "manifest_version": "0.3",
+  "name": "virgil",
+  "display_name": "Virgil",
+  "version": "3.39",
+  "description": "Read and organise your Virgil mindmap — maps, topics, pages and page content.",
+  "long_description": "Virgil is a mindmap browser for the Mac: instead of tabs, your browsing is a visual map of topics, sites and pages.\n\nThis extension lets Claude read and organise that map — find the research thread a question belongs to, read the pages you have saved, file new sources into topics, and reshape the map when it has drifted.\n\nEverything stays on your Mac: Claude talks to Virgil over the loopback interface, and Virgil keeps your maps in a local database.\n\nVirgil must be installed and running, with \"Connect External Agents\" switched on in Settings → AI Features → Agents.",
+  "author": {
+    "name": "Introspective Labs, Inc.",
+    "url": "https://virgil.app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Introspective-Labs/virgil-mcpb.git"
+  },
+  "homepage": "https://virgil.app",
+  "documentation": "https://virgil.app/claude-desktop",
+  "support": "https://virgil.app/support",
+  "icon": "icon.png",
+  "license": "MIT",
+  "keywords": [
+    "browser",
+    "mindmap",
+    "research",
+    "bookmarks",
+    "tabs"
+  ],
+  "privacy_policies": [
+    "https://virgil.app/privacy"
+  ],
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": [
+      "darwin"
+    ]
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/index.js"
+      ]
+    }
+  },
+  "tools_generated": true,
+  "tools": [
+    {
+      "name": "list_maps",
+      "description": "List the mindmap workspaces in Virgil."
+    },
+    {
+      "name": "get_current_state",
+      "description": "Report the active map and the page on screen right now."
+    },
+    {
+      "name": "list_topics",
+      "description": "List the topics in a map."
+    },
+    {
+      "name": "get_topic",
+      "description": "Get one topic in full: its subtopics, sites and pages."
+    },
+    {
+      "name": "list_pages_in_topic",
+      "description": "List the pages a topic shows on the map."
+    },
+    {
+      "name": "get_page",
+      "description": "Get one page's title, URL, summary and hero image."
+    },
+    {
+      "name": "read_page_content",
+      "description": "Read a saved page's text content, one window at a time."
+    },
+    {
+      "name": "get_screenshot",
+      "description": "Return a page's stored thumbnail image."
+    },
+    {
+      "name": "search_pages",
+      "description": "Search every saved page by text, by meaning, or both."
+    },
+    {
+      "name": "search_topics",
+      "description": "Find the existing topics closest in meaning to a query."
+    },
+    {
+      "name": "get_navigation_history",
+      "description": "List recently visited pages, newest first."
+    },
+    {
+      "name": "ping",
+      "description": "Check that Virgil is reachable and see which tools it offers."
+    },
+    {
+      "name": "get_map_digest",
+      "description": "Read the whole current map as one compact tree."
+    },
+    {
+      "name": "read_generated_page",
+      "description": "Read the stored HTML of a page Virgil generated or the user wrote."
+    },
+    {
+      "name": "create_topic",
+      "description": "Start a new topic in the current map."
+    },
+    {
+      "name": "create_subtopic",
+      "description": "Add a subtopic inside a topic."
+    },
+    {
+      "name": "add_page_to_topic",
+      "description": "File a web page into a topic as a saved source."
+    },
+    {
+      "name": "rename_topic",
+      "description": "Rename a topic."
+    },
+    {
+      "name": "move_page_to_topic",
+      "description": "Move a page to another topic or subtopic."
+    },
+    {
+      "name": "update_page_metadata",
+      "description": "Change a page's title, description or summary."
+    },
+    {
+      "name": "pin_page",
+      "description": "Pin a page so its topic keeps it on the map."
+    },
+    {
+      "name": "unpin_page",
+      "description": "Unpin a page so it can be evicted again."
+    },
+    {
+      "name": "create_share_link",
+      "description": "Publish a topic or map as a public read-only link."
+    },
+    {
+      "name": "delete_topic",
+      "description": "Delete a topic; it stays recoverable from the timeline."
+    },
+    {
+      "name": "merge_topics",
+      "description": "Merge one topic into another."
+    },
+    {
+      "name": "open_page",
+      "description": "Show a saved page in Virgil's page viewer."
+    },
+    {
+      "name": "publish_page",
+      "description": "Write an HTML page into a topic and open it for the user."
+    },
+    {
+      "name": "unpublish_page",
+      "description": "Take a published page's public copy down."
+    },
+    {
+      "name": "propose_reorganization",
+      "description": "Propose a set of map changes for the user to approve in one review."
+    }
+  ]
+}

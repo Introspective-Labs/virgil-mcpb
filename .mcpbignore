@@ -1,0 +1,9 @@
+# Repository files that are not part of the extension bundle.
+.git/
+.github/
+.gitignore
+.mcpbignore
+SECURITY.md
+*.mcpb
+node_modules/
+.DS_Store
