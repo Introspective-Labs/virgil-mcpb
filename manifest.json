@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "virgil",
   "display_name": "Virgil",
-  "version": "3.39",
+  "version": "3.40",
   "description": "Read and organise your Virgil mindmap — maps, topics, pages and page content.",
   "long_description": "Virgil is a mindmap browser for the Mac: instead of tabs, your browsing is a visual map of topics, sites and pages.\n\nThis extension lets Claude read and organise that map — find the research thread a question belongs to, read the pages you have saved, file new sources into topics, and reshape the map when it has drifted.\n\nEverything stays on your Mac: Claude talks to Virgil over the loopback interface, and Virgil keeps your maps in a local database.\n\nVirgil must be installed and running, with \"Connect External Agents\" switched on in Settings → AI Features → Agents.",
   "author": {
