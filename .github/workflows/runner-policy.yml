@@ -1,0 +1,77 @@
+name: Runner policy
+
+# Which runners a job may ask for depends on the repo's visibility.
+#
+# A PRIVATE repo runs every job on the org's self-hosted runners. The AWS
+# CodeBuild fleet is retired and GitHub-hosted minutes are budget-blocked at
+# $0, so a job asking for either one never gets a runner.
+#
+# A PUBLIC repo is the reverse. Anyone can open a pull request against it, and
+# a self-hosted runner would run that stranger's code on our machine; the org's
+# runner groups refuse public repos anyway, so such a job would never start.
+#
+# Both mistakes fail silently as a job that queues forever. This check turns
+# them into a red PR. The only accepted way to name a GitHub-hosted image is a
+# runs-on that selects it only when the repo is public, written on one line:
+#
+#   runs-on: ${{ github.event.repository.private && fromJSON('["self-hosted","Linux","X64"]') || 'ubuntu-latest' }}
+
+on:
+  pull_request:
+  push:
+    branches: [main, master, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  runner-policy:
+    name: Runner policy
+    runs-on: ${{ github.event.repository.private && fromJSON('["self-hosted","Linux","X64"]') || 'ubuntu-latest' }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refuse runners this repo can never get
+        shell: bash
+        env:
+          REPO_PRIVATE: ${{ github.event.repository.private }}
+        run: |
+          set -euo pipefail
+          hosted='(^|[^a-zA-Z0-9_.-])(ubuntu|macos|windows)-(latest|[0-9])'
+          # The visibility switch: hosted image only in the public (`||`) arm.
+          # A self-hosted label: in a runs-on, as a sequence item, or quoted in fromJSON.
+          selfhosted='runs[-]on:.*(self[-]hosted|x86-64|docker)|^[[:space:]]*-[[:space:]]+self[-]hosted[[:space:]]*$|"self[-]hosted"'
+          switch="github\.event\.repository\.private && .* \|\| '(ubuntu|macos|windows)-[A-Za-z0-9.-]+' *\}\}"
+          case "$REPO_PRIVATE" in true|false) ;; *)
+            echo "::error::Cannot tell whether this repo is private (got '$REPO_PRIVATE')."; exit 1 ;; esac
+          status=0
+          fail() { echo "::error file=$1,line=$2::$3"; status=1; }
+          for f in .github/workflows/*.yml .github/workflows/*.yaml .github/actions/*/action.yml; do
+            [ -f "$f" ] || continue
+            n=0
+            while IFS= read -r line || [ -n "$line" ]; do
+              n=$((n + 1))
+              code="${line%%#*}"
+              if printf '%s' "$code" | grep -qE 'codebuild[-]'; then
+                fail "$f" "$n" "CodeBuild runner label. The fleet is retired; use a self-hosted runner."
+              fi
+              if printf '%s' "$code" | grep -qE "$switch"; then
+                # The private arm must not be a hosted image either.
+                arm=$(printf '%s' "$code" | sed -E "s/ \|\| '[^']*' *\}\}.*//")
+                if printf '%s' "$arm" | grep -qE "$hosted"; then
+                  fail "$f" "$n" "The private arm of this runs-on names a GitHub-hosted image."
+                fi
+                continue
+              fi
+              if [ "$REPO_PRIVATE" = true ]; then
+                if printf '%s' "$code" | grep -qE "$hosted"; then
+                  fail "$f" "$n" "GitHub-hosted runner in a private repo. Hosted minutes are budget-blocked; use a self-hosted runner, or the public-only switch described in runner-policy.yml."
+                fi
+              else
+                if printf '%s' "$code" | grep -qE "$selfhosted"; then
+                  fail "$f" "$n" "Self-hosted runner in a public repo. It would run fork pull requests on our machine; use a GitHub-hosted image."
+                fi
+              fi
+            done < "$f"
+          done
+          exit "$status"
